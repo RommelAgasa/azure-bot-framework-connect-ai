@@ -1,0 +1,18 @@
+{
+  "name": "facebook-ai-bot",
+  "version": "1.0.0",
+  "description": "Facebook AI Bot with Azure Bot Service",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "@azure/identity": "latest",
+    "botbuilder": "^4.23.3",
+    "botbuilder-core": "^4.23.3",
+    "dotenv": "^17.2.3",
+    "openai": "latest",
+    "restify": "^11.1.0"
+  }
+}

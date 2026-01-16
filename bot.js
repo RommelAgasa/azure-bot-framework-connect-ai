@@ -56,7 +56,7 @@ class EchoBot extends ActivityHandler {
         ],
         model: process.env.AZURE_OPENAI_MODEL
       });
-      console.log('Full Azure OpenAI response:', JSON.stringify(response, null, 2));
+      // console.log('Full Azure OpenAI response:', JSON.stringify(response, null, 2));
       // New Azure OpenAI response format: extract from response.output
       if (response.output && Array.isArray(response.output)) {
         const messageObj = response.output.find(item => item.type === 'message' && item.content && Array.isArray(item.content) && item.content.length > 0 && item.content[0].text);

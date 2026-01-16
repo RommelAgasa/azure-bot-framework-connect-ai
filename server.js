@@ -17,7 +17,8 @@ const bot = new EchoBot();
 // ✅ Create the Bot Framework adapter for Web Chat / Bot Service
 const adapter = new BotFrameworkAdapter({
   appId: process.env.MicrosoftAppId,
-  appPassword: process.env.MicrosoftAppPassword
+  appPassword: process.env.MicrosoftAppPassword,
+  tenantId: process.env.MicrosoftTenantId
 });
 
 // ✅ Facebook webhook verification

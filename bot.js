@@ -20,7 +20,16 @@ class EchoBot extends ActivityHandler {
     // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
     this.onMessage(async (context, next) => {
       const replyText = await this.getAIResponse(context.activity.text);
-      await context.sendActivity(MessageFactory.text(replyText, replyText));
+        // Facebook message limit: 2000 characters
+        const MAX_FB_MSG_LENGTH = 2000;
+        if (replyText && replyText.length > MAX_FB_MSG_LENGTH) {
+          for (let i = 0; i < replyText.length; i += MAX_FB_MSG_LENGTH) {
+            const chunk = replyText.substring(i, i + MAX_FB_MSG_LENGTH);
+            await context.sendActivity(MessageFactory.text(chunk, chunk));
+          }
+        } else {
+          await context.sendActivity(MessageFactory.text(replyText, replyText));
+        }
 
       // By calling next() you ensure that the next BotHandler is run.
       await next();

@@ -14,37 +14,37 @@ server.use(restify.plugins.bodyParser());
 
 const bot = new EchoBot();
 
-// ✅ Create the Bot Framework adapter for Web Chat / Bot Service
+// Create the Bot Framework adapter for Web Chat / Bot Service
 const adapter = new BotFrameworkAdapter({
   appId: process.env.MicrosoftAppId,
   appPassword: process.env.MicrosoftAppPassword,
   tenantId: process.env.MicrosoftTenantId
 });
 
-// ✅ Facebook webhook verification
+// Facebook webhook verification
 server.get('/api/messages', (req, res, next) => {
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
   const challenge = req.query['hub.challenge'];
 
   if (mode === 'subscribe' && token === process.env.FACEBOOK_VERIFY_TOKEN) {
-    console.log('✅ Facebook webhook verified');
+    console.log('Facebook webhook verified');
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end(challenge);
   } else {
-    console.log('❌ Facebook webhook verification failed');
+    console.log('Facebook webhook verification failed');
     res.writeHead(403, { 'Content-Type': 'text/plain' });
     res.end('Forbidden');
   }
   return next();
 });
 
-// ✅ Unified endpoint for Facebook and Azure Bot messages
+// Unified endpoint for Facebook and Azure Bot messages
 server.post('/api/messages', async (req, res) => {
   const body = req.body;
 
   try {
-    // 1️⃣ Handle Facebook messages
+    // Handle Facebook messages
     if (body.object === 'page') {
       for (const entry of body.entry) {
         for (const messaging_event of entry.messaging) {
@@ -52,7 +52,7 @@ server.post('/api/messages', async (req, res) => {
           const text = messaging_event.message?.text;
 
           if (text) {
-            console.log(`📩 Facebook message from ${sender_id}: ${text}`);
+            console.log(`Facebook message from ${sender_id}: ${text}`);
             const aiResponse = await bot.getAIResponse(text);
             await sendFacebookMessage(sender_id, aiResponse);
           }
@@ -62,7 +62,7 @@ server.post('/api/messages', async (req, res) => {
       return;
     }
 
-    // 2️⃣ Handle Azure Bot Framework (Web Chat)
+    // Handle Azure Bot Framework (Web Chat)
     await adapter.processActivity(req, res, async (context) => {
       if (context.activity.type === 'message') {
         const aiResponse = await bot.getAIResponse(context.activity.text);
@@ -71,13 +71,13 @@ server.post('/api/messages', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Error handling message:', error);
+    console.error('Error handling message:', error);
     res.writeHead(500);
     res.end(JSON.stringify({ error: error.message }));
   }
 });
 
-// ✅ Send message back to Facebook
+// Send message back to Facebook
 async function sendFacebookMessage(recipientId, messageText) {
   try {
     await axios.post(
@@ -92,13 +92,13 @@ async function sendFacebookMessage(recipientId, messageText) {
         }
       }
     );
-    console.log(`✅ Sent message to ${recipientId}: ${messageText}`);
+    console.log(`Sent message to ${recipientId}: ${messageText}`);
   } catch (error) {
-    console.error('❌ Error sending Facebook message:', error.response?.data || error.message);
+    console.error('Error sending Facebook message:', error.response?.data || error.message);
   }
 }
 
-// ✅ Health check
+// Health check
 server.get('/health', (req, res, next) => {
   res.send('Bot is running');
   return next();
@@ -106,5 +106,5 @@ server.get('/health', (req, res, next) => {
 
 const PORT = process.env.PORT || 3978;
 server.listen(PORT, () => {
-  console.log(`🚀 Server listening on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });

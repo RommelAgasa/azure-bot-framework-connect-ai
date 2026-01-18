@@ -55,6 +55,20 @@ az webapp log tail --name name --resource-group your-resource-group
 az webapp up --name name --resource-group your-resource-group
 ```
 
+## Deployment using the .zip file
+
+Open powershell Execute the command
+
+# Get all items except the excluded ones
+$items = Get-ChildItem -Path . | Where-Object { $_.Name -notin @('.azure', '.env', '.git', '.gitignore', 'node_modules') }
+
+# Create the ZIP file
+Compress-Archive -Path $items.FullName -DestinationPath "Path\azure-bot-framework.zip"
+
+# Deploy
+
+az webapp deploy source config-zip --resource-group your-resource-group --name name-of-web-app --src "Path-of-zip-file"
+
 ## Check Deployment
 
 After deployment, visit your app in the Azure Portal and navigate to your Azure App Service to verify it is running correctly.

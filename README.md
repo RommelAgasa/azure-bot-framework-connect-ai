@@ -52,7 +52,7 @@ az login
 az webapp log tail --name name --resource-group your-resource-group
 
 # Deploy the app to Azure
-az webapp up --name name --resource-group your-resource-group
+az webapp up --name name --resource-group your-resource-group --location southeastasia --sku F1
 ```
 
 ## Deployment using the .zip file

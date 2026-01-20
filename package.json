@@ -1,18 +1,25 @@
 {
   "name": "facebook-ai-bot",
   "version": "1.0.0",
-  "description": "Facebook AI Bot with Azure Bot Service",
-  "main": "server.js",
+  "description": "Facebook AI Bot with Azure Bot Service and Azure Functions",
+  "main": "dist/src/index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "start": "func start",
+    "local": "npm run build && npm start"
   },
   "dependencies": {
+    "@azure/functions": "^4.0.0",
     "@azure/identity": "latest",
+    "axios": "^1.6.2",
     "botbuilder": "^4.23.3",
     "botbuilder-core": "^4.23.3",
     "dotenv": "^17.2.3",
-    "openai": "latest",
-    "restify": "^11.1.0"
+    "openai": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
   }
 }

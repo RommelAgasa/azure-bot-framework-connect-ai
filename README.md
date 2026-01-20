@@ -1,23 +1,134 @@
-# Azure Bot Framework Project
+# Facebook AI Bot - Azure Functions TypeScript Version
 
-This project is a Node.js application that utilizes the Microsoft Azure Bot Framework to create and run a chatbot server.
+This is a TypeScript conversion of your Facebook AI Bot for deployment to **Azure Functions**.
 
 ## Project Structure
 
-- `bot.js` - Main bot logic and configuration.
-- `server.js` - Entry point for starting the bot server.
-- `package.json` - Project metadata and dependencies.
+```
+src/
+├── functions/
+│   ├── messages/       # HTTP trigger for /api/messages endpoint
+│   └── health/         # HTTP trigger for health check
+├── bot.ts              # Main bot logic (TypeScript version)
+├── config.ts           # Configuration management
+├── facebook.ts         # Facebook Messenger utilities
+```
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (v14 or higher recommended)
-- An Azure account (for deploying to Azure)
+1. **Node.js** - v18 or higher
+2. **Azure Functions Core Tools** - Latest version
+3. **Azure CLI** - For deployment
+4. **TypeScript** - Will be installed via npm
 
-## Setup
+## Setup Instructions
 
-1. **Install dependencies:**
-   ```bash
-   npm install
+### 1. Install Dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure Environment Variables
+
+Update `local.settings.json`:
+
+```json
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "MicrosoftAppId": "your_app_id",
+    "MicrosoftAppPassword": "your_app_password",
+    "AZURE_OPENAI_ENDPOINT": "your_endpoint",
+    "AZURE_OPENAI_KEY": "your_key",
+    "AZURE_OPENAI_API_VERSION": "2024-02-15-preview",
+    "AZURE_OPENAI_MODEL": "your_deployment_name",
+    "FACEBOOK_VERIFY_TOKEN": "your_verify_token",
+    "FACEBOOK_PAGE_ACCESS_TOKEN": "your_page_token"
+  }
+}
+```
+
+### 3. Build TypeScript
+
+```bash
+npm run build
+```
+
+### 4. Run Locally
+
+```bash
+npm run local
+```
+
+The bot will be available at:
+- Messages endpoint: `http://localhost:7071/api/messages`
+- Health check: `http://localhost:7071/api/health`
+
+## Deployment to Azure Functions
+
+### 1. Create Azure Function App (if not exists)
+
+```bash
+az functionapp create \
+  --resource-group <resource-group> \
+  --consumption-plan-location eastus \
+  --runtime node \
+  --runtime-version 20 \
+  --functions-version 4 \
+  --name <function-app-name>
+```
+
+### 2. Deploy
+
+```bash
+func azure functionapp publish <function-app-name>
+```
+
+### 3. Configure Application Settings
+
+In Azure Portal, add these Application settings:
+
+- `MicrosoftAppId`
+- `MicrosoftAppPassword`
+- `MicrosoftTenantId`
+- `AZURE_OPENAI_ENDPOINT`
+- `AZURE_OPENAI_KEY`
+- `AZURE_OPENAI_API_VERSION`
+- `AZURE_OPENAI_MODEL`
+- `FACEBOOK_VERIFY_TOKEN`
+- `FACEBOOK_PAGE_ACCESS_TOKEN`
+
+### 4. Configure Facebook Webhook
+
+In Facebook App Settings, set Webhook URL to:
+```
+https://<function-app-name>.azurewebsites.net/api/messages
+```
+
+## Key Benefits of TypeScript + Azure Functions
+
+✅ **Type Safety** - Catch errors at compile time  
+✅ **Serverless** - Auto-scaling and pay-per-use pricing  
+✅ **No infrastructure** - Azure manages all server operations  
+✅ **High availability** - Built-in redundancy  
+✅ **Better performance** - Optimized for event-driven workloads  
+
+## Available Scripts
+
+- `npm run build` - Compile TypeScript to JavaScript
+- `npm run watch` - Watch for changes and recompile
+- `npm start` - Start Azure Functions locally
+- `npm run local` - Build and start locally
+
+## Documentation
+
+- [Azure Functions Node.js](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-node)
+- [Bot Framework SDK](https://github.com/microsoft/botbuilder-js)
+- [Azure OpenAI](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/)
+
    ```
 
 2. **Run the bot locally:**
